@@ -1,10 +1,12 @@
 class ListsController < ApplicationController
-
+  before_action :set_list, only: [:show, :destroy]
   def index
     @lists = List.all
   end
 
   def show
+    @bookmark = Bookmark.new
+    # to do later add reviews here
   end
 
   def new
@@ -12,21 +14,23 @@ class ListsController < ApplicationController
   end
 
   def create
-    @lists = List.new(list_params) # what is it with the params!
-    raise
+    @list = List.new(list_params)
     @list.save
-    redirect_to lists_path(@list)
+    redirect_to list_path(@list)
   end
 
   def destroy
     @list.destroy
-    redirect_to lists_path, status: :see_other
+    redirect_to list_path (@lists), status: :see_other
   end
 
   private
 
-  def list_params
-    params.require(:list).permit(:name)
+  def set_list
+    @list = List.find(params[:id])
   end
 
+  def list_params
+    params.require(:list).permit(:name) # later add photo here
+  end
 end
